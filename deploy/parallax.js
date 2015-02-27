@@ -404,8 +404,7 @@
     y += 'px';
     if (this.transform3DSupport) {
       this.css(element, 'transform-origin', 'center center 0');
-      this.css(element, 'transform', 'rotateZ('+angle+')');
-      //this.css(element, 'transform', 'translate3d('+x+','+y+',0) rotateZ('+angle+')');
+      this.css(element, 'transform', 'translate3d('+x+','+y+',0) rotateZ('+angle+')');
     } else if (this.transform2DSupport) {
       this.css(element, 'transform-origin', 'center center');
       this.css(element, 'transform', 'translate('+x+','+y+') rotate('+angle+')');
