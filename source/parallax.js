@@ -68,6 +68,7 @@
     this.calibrationFlag = true;
     this.enabled = false;
     this.depths = [];
+    this.rotates =[];
     this.raf = null;
 
     // Element Bounds
@@ -233,6 +234,7 @@
     // Cache Layer Elements
     this.layers = this.element.getElementsByClassName('layer');
     this.depths = [];
+    this.rotates = [];
 
     // Configure Layer Styles
     for (var i = 0, l = this.layers.length; i < l; i++) {
@@ -243,8 +245,9 @@
       layer.style.left = 0;
       layer.style.top = 0;
 
-      // Cache Layer Depth
+      // Cache Layer Depth & Rotate
       this.depths.push(this.data(layer, 'depth') || 0);
+      this.rotates.push(this.data(layer, 'rotate') || 0);
     }
   };
 
@@ -365,13 +368,15 @@
     this.css(element, 'backface-visibility', 'hidden');
   };
 
-  Parallax.prototype.setPosition = function(element, x, y) {
+  Parallax.prototype.setPosition = function(element, x, y, angle) {
     x += 'px';
     y += 'px';
     if (this.transform3DSupport) {
-      this.css(element, 'transform', 'translate3d('+x+','+y+',0)');
+      this.css(element, 'transform-origin', 'center center 0');
+      this.css(element, 'transform', 'translate3d('+x+','+y+',0) rotateZ('+angle+')');
     } else if (this.transform2DSupport) {
-      this.css(element, 'transform', 'translate('+x+','+y+')');
+      this.css(element, 'transform-origin', 'center center');
+      this.css(element, 'transform', 'translate('+x+','+y+') rotate('+angle+')');
     } else {
       element.style.left = x;
       element.style.top = y;
@@ -421,9 +426,10 @@
     for (var i = 0, l = this.layers.length; i < l; i++) {
       var layer = this.layers[i];
       var depth = this.depths[i];
+      var rotate = this.rotates[i];
       var xOffset = this.vx * depth * (this.invertX ? -1 : 1);
       var yOffset = this.vy * depth * (this.invertY ? -1 : 1);
-      this.setPosition(layer, xOffset, yOffset);
+      this.setPosition(layer, xOffset, yOffset, rotate);
     }
     this.raf = requestAnimationFrame(this.onAnimationFrame);
   };
